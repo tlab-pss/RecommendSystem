@@ -3,7 +3,7 @@ package presenters
 import (
 	"context"
 	"github.com/gin-gonic/gin"
-	"github.com/yuuis/RecommendSystem/api/utilities"
+	"main/api/utilities"
 	"net/http"
 )
 

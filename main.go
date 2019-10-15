@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/yuuis/RecommendSystem/api"
-	"github.com/yuuis/RecommendSystem/infrastructures"
+	"main/api"
+	"main/infrastructures"
 	"log"
 )
 

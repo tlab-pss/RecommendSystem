@@ -2,8 +2,8 @@ package presenters
 
 import (
 	"context"
-	"github.com/yuuis/RecommendSystem/api/utilities"
-	"github.com/yuuis/RecommendSystem/models/hello"
+	"main/api/utilities"
+	"main/models/hello"
 	"net/http"
 )
 
