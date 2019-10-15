@@ -46,6 +46,8 @@ func SpecifyLocations() error {
 	}
 
 	defer res.Body.Close()
+
+	return nil
 }
 
 func specify(ls *[]location) (pair, pair, error) {
@@ -103,9 +105,6 @@ func getLocations() (*[]location, error) {
 	return &l, nil
 }
 
-func storeLocations() error {
-
-}
 
 type pair struct {
 	lat float64
