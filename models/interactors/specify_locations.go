@@ -3,10 +3,7 @@ package interactors
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"net/http"
-	"os"
 	"time"
 )
 
@@ -27,7 +24,7 @@ func SpecifyLocations() error {
 		"house": map[string]interface{}{
 			"lat": home.lat,
 			"lnt": home.lng,
-			},
+		},
 		"office": map[string]interface{}{
 			"lat": office.lat,
 			"lnt": office.lng,
@@ -75,7 +72,7 @@ func specify(ls *[]location) (pair, pair, error) {
 
 	//h := pair{}
 	//for _, t := range ht {
-		// todo: 最多要素を抽出したい
+	// todo: 最多要素を抽出したい
 	//}
 	h := pair{
 		lat: ht[0].Latitude,
@@ -116,8 +113,8 @@ type pair struct {
 }
 
 type location struct {
-	ID string `json:"ID"`
-	Latitude float64 `json:"Latitude"`
+	ID        string  `json:"ID"`
+	Latitude  float64 `json:"Latitude"`
 	Longitude float64 `json:"Longitude"`
-	CreatedAt string `json:"CreatedAt"`
+	CreatedAt string  `json:"CreatedAt"`
 }
