@@ -1,15 +1,18 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
 	"main/api/presenters"
 	"main/api/utilities"
-	"main/models/hello"
+	"main/models/recommend"
+
+	"github.com/gin-gonic/gin"
 )
 
 // Recommend : PDからレコメンドのリクエスト
 func Recommend(c *gin.Context) {
 	ctx := utilities.AddGinContext(c.Request.Context(), c)
 
-	presenters.HelloView(ctx, hello.Hello{Message: "hello"})
+	// Todo : プラグインサービスの選定
+
+	presenters.RecommendView(ctx, recommend.Recommend{Text: "hello"})
 }

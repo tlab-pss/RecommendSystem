@@ -1,10 +1,11 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
 	"main/api/presenters"
 	"main/api/utilities"
 	"main/models/hello"
+
+	"github.com/gin-gonic/gin"
 )
 
 // todo: サンプル実装。最初のprでこのファイルを削除
