@@ -1,18 +1,34 @@
 package controllers
 
 import (
+	"fmt"
 	"main/api/presenters"
 	"main/api/utilities"
 	"main/models/recommend"
 
 	"github.com/gin-gonic/gin"
+
+	"main/modules/selector"
 )
 
-// Recommend : PDからレコメンドのリクエスト
+// Recommend : PAからレコメンドのリクエスト
 func Recommend(c *gin.Context) {
 	ctx := utilities.AddGinContext(c.Request.Context(), c)
 
-	// Todo : プラグインサービスの選定
+	var rrt recommend.ReceiveRequestType
+	if err := c.BindJSON(&rrt); err != nil {
+		presenters.ViewBadRequest(ctx, err)
+	}
 
-	presenters.RecommendView(ctx, recommend.Recommend{Text: "hello"})
+	// Note : プラグインサービスの選定
+	plugin, err := selector.PluginServiceSelector(rrt.TopicCategory)
+	if err != nil {
+		fmt.Printf("Plugin not found: %+v", rrt.TopicCategory)
+		presenters.RecommendView(ctx, recommend.Recommend{Success: false})
+	}
+
+	// Todo : プラグイン情報から、外部サービスにリクエストをする
+	fmt.Printf("Execute plugin: ", plugin)
+
+	presenters.RecommendView(ctx, recommend.Recommend{Success: true, Text: plugin.Name})
 }
