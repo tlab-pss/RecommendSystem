@@ -8,7 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"main/modules/selector"
+	serviceselector "main/modules/selector"
 )
 
 // Recommend : PAからレコメンドのリクエスト
@@ -21,14 +21,14 @@ func Recommend(c *gin.Context) {
 	}
 
 	// Note : プラグインサービスの選定
-	plugin, err := selector.PluginServiceSelector(rrt.TopicCategory)
+	plugin, err := serviceselector.PluginServiceSelector(rrt.TopicCategory)
 	if err != nil {
 		fmt.Printf("Plugin not found: %+v", rrt.TopicCategory)
 		presenters.RecommendView(ctx, recommend.Recommend{Success: false})
 	}
 
 	// Todo : プラグイン情報から、外部サービスにリクエストをする
-	fmt.Printf("Execute plugin: ", plugin)
+	fmt.Printf("Execute plugin: %+v", plugin)
 
 	presenters.RecommendView(ctx, recommend.Recommend{Success: true, Text: plugin.Name})
 }

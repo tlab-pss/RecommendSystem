@@ -1,9 +1,9 @@
 package main
 
 import (
+	"log"
 	"main/api"
 	"main/infrastructures"
-	"log"
 )
 
 func main() {
