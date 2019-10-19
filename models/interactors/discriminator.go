@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"net/http"
+	"os"
 )
 
+// base64エンコードされた画像を引数に渡してね！
 func Discriminate(i string) error {
 
 	v, err := requestVisionAI(i)
@@ -60,7 +62,7 @@ func requestVisionAI(i string) (*visionAIResponse, error) {
 		},
 	})
 
-	req, err := http.NewRequest("POST", "https://vision.googleapis.com/v1/images:annotate?key=", bytes.NewReader(bByte))
+	req, err := http.NewRequest("POST", "https://vision.googleapis.com/v1/images:annotate?key="+os.Getenv("GOOGLE_API_KEY"), bytes.NewReader(bByte))
 
 	if err != nil {
 		return &v, err
