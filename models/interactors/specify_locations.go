@@ -14,7 +14,7 @@ func SpecifyLocations() error {
 		return err
 	}
 
-	home, office, err := specify(ls)
+	home, office, err := specify(*ls)
 
 	if err != nil {
 		return err
@@ -50,7 +50,7 @@ func SpecifyLocations() error {
 	return nil
 }
 
-func specify(ls *[]location) (pair, pair, error) {
+func specify(ls []location) (pair, pair, error) {
 	ht := make([]location, 0)
 	ot := make([]location, 0)
 
