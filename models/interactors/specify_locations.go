@@ -31,7 +31,7 @@ func SpecifyLocations() error {
 		},
 	})
 
-	req, err := http.NewRequest("POST", "pd/api/locations", bytes.NewReader(bByte))
+	req, err := http.NewRequest("POST", "pd:8080/api/locations", bytes.NewReader(bByte))
 
 	if err != nil {
 		return err
@@ -95,7 +95,7 @@ func specify(ls []location) (pair, pair, error) {
 }
 
 func getLocations() (*[]location, error) {
-	res, _ := http.Get("pd/api/locations")
+	res, _ := http.Get("pd:8080/api/locations")
 	defer res.Body.Close()
 
 	l := make([]location, 0)
