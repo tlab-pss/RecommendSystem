@@ -63,6 +63,7 @@ func specify(ls *[]location) (pair, pair, error) {
 
 		h := t.Hour() + 9
 
+		// todo: 時間決め打ちしてるけど、将来的には人によってここも変えたい
 		if 0 < h && h < 5 {
 			ht = append(ht, l)
 		}
