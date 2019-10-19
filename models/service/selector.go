@@ -1,4 +1,4 @@
-package serviceselector
+package service
 
 import (
 	"encoding/json"
@@ -10,47 +10,7 @@ import (
 	"time"
 
 	funk "github.com/thoas/go-funk"
-
-	"main/models/service"
 )
-
-// PluginService : サービスプラグインの型
-type PluginService struct {
-	ID            string
-	Name          string
-	BigCategoryID string
-	CreatedAt     time.Time
-}
-
-func (p PluginService) toServiceCategory() service.ServiceCategory {
-
-	bigCategoryID := p.BigCategoryID
-
-	switch bigCategoryID {
-	case "0":
-		return service.Commerce
-	case "1":
-		return service.Gourmet
-	case "2":
-		return service.Weather
-	case "3":
-		return service.Map
-	case "4":
-		return service.Mail
-	case "5":
-		return service.Music
-	case "6":
-		return service.Message
-	case "7":
-		return service.Search
-	case "8":
-		return service.Translation
-	case "9":
-		return service.News
-	default:
-		return service.Uncategorized
-	}
-}
 
 // GetPluginService : プラグインされたサービスを取得
 func GetPluginService() (*[]PluginService, error) {
@@ -82,7 +42,7 @@ func GetPluginService() (*[]PluginService, error) {
 }
 
 // PluginServiceSelector : プラグインサービスを選別する関数
-func PluginServiceSelector(sc service.ServiceCategory) (*PluginService, error) {
+func PluginServiceSelector(sc ServiceCategory) (*PluginService, error) {
 
 	var pluginService PluginService
 
@@ -98,6 +58,7 @@ func PluginServiceSelector(sc service.ServiceCategory) (*PluginService, error) {
 		return &pluginService, errors.New("Could not cast PluginService")
 	}
 
+	// TODO : 今はランダム。利用傾向や満足度などからよしなにしたい
 	rand.Seed(time.Now().UnixNano())
 	i := rand.Intn(len(pluginList))
 	pluginService = pluginList[i]
