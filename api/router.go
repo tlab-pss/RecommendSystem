@@ -1,7 +1,7 @@
 package api
 
 import (
-	"main/api/controllers"
+	"github.com/yuuis/RecommendSystem/api/controllers"
 
 	"github.com/gin-gonic/gin"
 )

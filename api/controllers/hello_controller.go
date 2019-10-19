@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"main/api/presenters"
-	"main/api/utilities"
-	"main/models/hello"
+	"github.com/yuuis/RecommendSystem/api/presenters"
+	"github.com/yuuis/RecommendSystem/api/utilities"
+	"github.com/yuuis/RecommendSystem/models/hello"
 
 	"github.com/gin-gonic/gin"
 )

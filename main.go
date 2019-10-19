@@ -2,8 +2,9 @@ package main
 
 import (
 	"log"
-	"main/api"
-	"main/infrastructures"
+
+	"github.com/yuuis/RecommendSystem/api"
+	"github.com/yuuis/RecommendSystem/infrastructures"
 )
 
 func main() {

@@ -1,4 +1,4 @@
-module main
+module github.com/yuuis/RecommendSystem
 
 go 1.13
 

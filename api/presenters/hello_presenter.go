@@ -2,9 +2,10 @@ package presenters
 
 import (
 	"context"
-	"main/api/utilities"
-	"main/models/hello"
 	"net/http"
+
+	"github.com/yuuis/RecommendSystem/api/utilities"
+	"github.com/yuuis/RecommendSystem/models/hello"
 )
 
 // todo: サンプル実装。最初のprでこのを削除

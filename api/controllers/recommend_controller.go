@@ -2,14 +2,15 @@ package controllers
 
 import (
 	"fmt"
-	"main/api/presenters"
-	"main/api/utilities"
-	"main/models/recommend"
-	"main/models/service"
+
+	"github.com/yuuis/RecommendSystem/api/presenters"
+	"github.com/yuuis/RecommendSystem/api/utilities"
+	"github.com/yuuis/RecommendSystem/models/recommend"
+	"github.com/yuuis/RecommendSystem/models/service"
 
 	"github.com/gin-gonic/gin"
 
-	serviceselector "main/modules/selector"
+	serviceselector "github.com/yuuis/RecommendSystem/modules/selector"
 )
 
 // ReceiveRequestType : 送られてきたリクエストに付随する値を格納する型

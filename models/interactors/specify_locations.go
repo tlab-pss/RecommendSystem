@@ -106,7 +106,6 @@ func getLocations() (*[]location, error) {
 	return &l, nil
 }
 
-
 type pair struct {
 	lat float64
 	lng float64
