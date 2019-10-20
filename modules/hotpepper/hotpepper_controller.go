@@ -11,7 +11,7 @@ import (
 func Request() (*Payload, error) {
 	replyData := new(Payload)
 
-	req, err := http.NewRequest("GET", "http://pd:8080/api/plugin-services", nil)
+	req, err := http.NewRequest("GET", "http://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=", nil)
 	if err != nil {
 		fmt.Printf("pd error, cannot create http request")
 		return nil, err

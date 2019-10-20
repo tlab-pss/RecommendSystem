@@ -14,4 +14,5 @@ func Router(e *gin.Engine) {
 
 	// PAからサービスのリクエストを受ける
 	api.GET("/request", controllers.Recommend)
+
 }
