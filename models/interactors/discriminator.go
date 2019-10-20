@@ -3,17 +3,18 @@ package interactors
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/yuuis/RecommendSystem/models/service"
 	"net/http"
 	"os"
 )
 
 // base64エンコードされた画像を引数に渡してね！
-func Discriminate(i string) error {
-
+func Discriminate(i string) (*DiscriminateResult, error) {
+	var d DiscriminateResult
 	v, err := requestVisionAI(i)
 
 	if err != nil {
-		return err
+		return &d, err
 	}
 
 	var labels []string
@@ -31,14 +32,15 @@ func Discriminate(i string) error {
 
 		entity := v.Responses[0].WebDetection.WebEntities[0].Description // 最高ポイントのentity
 		if err := storeFood(labels, entity, i); err != nil {
-			return err
+			return &d, err
 		}
+
+		d.BigCategoryID = service.Gourmet
+		d.Object = entity
 	} else {
 		// todo: 現状食べ物以外はない
-		return nil
+		return &d, nil
 	}
-
-	return nil
 }
 
 func requestVisionAI(i string) (*visionAIResponse, error) {
@@ -154,6 +156,11 @@ type visionAIResponse struct {
 			} `json:"bestGuessLabels"`
 		} `json:"webDetection"`
 	} `json:"responses"`
+}
+
+type DiscriminateResult struct {
+	BigCategoryID service.ServiceCategory
+	Object string
 }
 
 // todo: 全体のutil作ってそこに移したい
