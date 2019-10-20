@@ -9,8 +9,6 @@ import (
 	"github.com/yuuis/RecommendSystem/models/service"
 
 	"github.com/gin-gonic/gin"
-
-	serviceselector "github.com/yuuis/RecommendSystem/modules/selector"
 )
 
 // ReceiveRequestType : 送られてきたリクエストに付随する値を格納する型
@@ -30,7 +28,7 @@ func Recommend(c *gin.Context) {
 	}
 
 	// Note : プラグインサービスの選定
-	plugin, err := serviceselector.PluginServiceSelector(rrt.TopicCategory)
+	plugin, err := service.PluginServiceSelector(rrt.TopicCategory)
 	if err != nil {
 		fmt.Printf("Plugin not found: %+v", rrt.TopicCategory)
 		presenters.RecommendView(ctx, recommend.Recommend{Success: false})
