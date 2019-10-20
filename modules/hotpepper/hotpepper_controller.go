@@ -5,13 +5,14 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 )
 
 // Request : APIにリクエストを投げる
-func Request() (*Payload, error) {
-	replyData := new(Payload)
+func Request(payload *Payload) (*ResponseType, error) {
+	replyData := new(ResponseType)
 
-	req, err := http.NewRequest("GET", "http://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=", nil)
+	req, err := http.NewRequest("GET", "http://webservice.recruit.co.jp/hotpepper/gourmet/v1/?format=json&key="+os.Getenv("RECRUIT_APIKEY")+"&keyword="+payload.Keywords, nil)
 	if err != nil {
 		fmt.Printf("pd error, cannot create http request")
 		return nil, err

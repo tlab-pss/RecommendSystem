@@ -1,16 +1,14 @@
 package main
 
 import (
-	"github.com/joho/godotenv"
+	"log"
+
 	"github.com/yuuis/RecommendSystem/api"
 	"github.com/yuuis/RecommendSystem/infrastructures"
-	"log"
 )
 
 func main() {
-	if err := godotenv.Load(); err != nil {
-		log.Fatal(err)
-	}
+	infrastructures.InitEnvironment()
 
 	s := infrastructures.NewServer()
 	api.Router(s)
