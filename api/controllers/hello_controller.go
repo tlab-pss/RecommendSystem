@@ -1,10 +1,11 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/yuuis/RecommendSystem/api/presenters"
 	"github.com/yuuis/RecommendSystem/api/utilities"
 	"github.com/yuuis/RecommendSystem/models/hello"
+
+	"github.com/gin-gonic/gin"
 )
 
 // todo: サンプル実装。最初のprでこのファイルを削除

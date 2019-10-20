@@ -2,9 +2,10 @@ package presenters
 
 import (
 	"context"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/yuuis/RecommendSystem/api/utilities"
-	"net/http"
 )
 
 func ViewInternalServerError(ctx context.Context, err error) {
