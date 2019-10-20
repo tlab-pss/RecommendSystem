@@ -8,6 +8,8 @@ import (
 )
 
 func main() {
+	infrastructures.InitEnvironment()
+
 	s := infrastructures.NewServer()
 	api.Router(s)
 
