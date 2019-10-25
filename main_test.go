@@ -44,7 +44,7 @@ func TestServiceRequestToHotpepper(t *testing.T) {
 	req, _ := http.NewRequest("POST", "/api/recommend", bytes.NewBuffer([]byte(requestData)))
 	s.ServeHTTP(w, req)
 
-	json := `{"Message":"hello"}`
+	json := `{"success":true,"text":"いろり屋 iroriya 新橋駅前店","image_paths":null}`
 	assert.Equal(t, 200, w.Code)
 	assert.Equal(t, json, w.Body.String())
 }
