@@ -50,23 +50,16 @@ func Recommend(c *gin.Context) {
 
 	if plugin.Name == "Hotpepper" {
 		var hotpepperRrt hotpepper.ReceiveRequestType
+		var payload hotpepper.Payload
 		if err := c.BindJSON(&hotpepperRrt); err != nil {
-			presenters.ViewBadRequest(ctx, err)
-		}
-
-		fmt.Printf("payload: %+v \n", hotpepperRrt)
-		// payload, ok := rrt.ServiceDataValue.(hotpepper.Payload)
-		// if !ok {
-		// 	// payload = hotpepper.Payload{
-		// 	// 	Keywords: "焼肉",
-		// 	// }
-		// 	result.Success = false
-		// 	result.Text = "error"
-		// 	presenters.RecommendView(ctx, *result)
-		// }
-
-		payload := hotpepper.Payload{
-			Keywords: "焼肉",
+			payload = hotpepper.Payload{
+				Keywords: "焼肉",
+			}
+			result.Success = false
+			result.Text = "error"
+			presenters.RecommendView(ctx, *result)
+		} else {
+			payload = hotpepperRrt.ServiceDataValue
 		}
 
 		serviceResponse, err := hotpepper.Request(&payload)
