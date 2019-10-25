@@ -1,5 +1,18 @@
 package hotpepper
 
+import (
+	"encoding/json"
+	"errors"
+
+	"github.com/yuuis/RecommendSystem/models/request"
+)
+
+// ReceiveRequestType : Hotpepper用のPAリクエスト型
+type ReceiveRequestType struct {
+	request.ReceiveRequestType
+	ServiceDataValue Payload `json:"service_data_value"`
+}
+
 // Payload : リクエストパラメタを格納する
 type Payload struct {
 	Keywords string `json:"keywords"`
@@ -115,4 +128,29 @@ type ResponseType struct {
 			Message string `json:"message"`
 		} `json:"error"`
 	} `json:"results"`
+}
+
+// GetShopNames : 店舗名を一覧で返す
+func (result ResponseType) GetShopNames() ([]string, error) {
+	shopLength := len(result.Results.Shop)
+	if shopLength == 0 {
+		return nil, errors.New("Shop is not found")
+	}
+
+	r := make([]string, shopLength)
+	for i, e := range result.Results.Shop {
+		r[i] = e.Name
+	}
+
+	return r, nil
+}
+
+// ConvertValue : PAから取得したValuesをHotpepperの型に合わせる
+func ConvertValue(strData string) (*Payload, error) {
+	payload := new(Payload)
+	err := json.Unmarshal([]byte(strData), payload)
+	if err != nil {
+		return nil, err
+	}
+	return payload, nil
 }

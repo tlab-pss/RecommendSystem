@@ -1,41 +1,91 @@
 package controllers
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 
 	"github.com/yuuis/RecommendSystem/api/presenters"
 	"github.com/yuuis/RecommendSystem/api/utilities"
 	"github.com/yuuis/RecommendSystem/models/recommend"
+	"github.com/yuuis/RecommendSystem/models/request"
 	"github.com/yuuis/RecommendSystem/models/service"
+	"github.com/yuuis/RecommendSystem/modules/hotpepper"
 
 	"github.com/gin-gonic/gin"
 )
 
-// ReceiveRequestType : 送られてきたリクエストに付随する値を格納する型
-type ReceiveRequestType struct {
-	TopicCategory    service.ServiceCategory `json:"topic_category"`
-	RequireService   bool                    `json:"require_service"`
-	ServiceDataValue interface{}             `json:"service_data_value"`
-}
-
 // Recommend : PAからレコメンドのリクエスト
 func Recommend(c *gin.Context) {
 	ctx := utilities.AddGinContext(c.Request.Context(), c)
+	bodyBytes, err := ioutil.ReadAll(c.Request.Body)
+	if err != nil {
+		presenters.ViewBadRequest(ctx, err)
+	}
 
-	var rrt ReceiveRequestType
-	if err := c.BindJSON(&rrt); err != nil {
+	var rrt request.ReceiveRequestType
+	if err := json.Unmarshal(bodyBytes, &rrt); err != nil {
 		presenters.ViewBadRequest(ctx, err)
 	}
 
 	// Note : プラグインサービスの選定
-	plugin, err := service.PluginServiceSelector(rrt.TopicCategory)
-	if err != nil {
-		fmt.Printf("Plugin not found: %+v", rrt.TopicCategory)
-		presenters.RecommendView(ctx, recommend.Recommend{Success: false})
+	// plugin, err := service.PluginServiceSelector(rrt.TopicCategory)
+	// if err != nil {
+	// 	fmt.Printf("Plugin not found: %+v", rrt.TopicCategory)
+	// 	presenters.RecommendView(ctx, recommend.Recommend{Success: false})
+	// }
+
+	plugin := &service.PluginService{
+		ID:            "uuid",
+		Name:          "Hotpepper",
+		BigCategoryID: "1",
 	}
 
 	// Todo : プラグイン情報から、外部サービスにリクエストをする
-	fmt.Printf("Execute plugin: %+v", plugin)
+	fmt.Printf("Execute plugin: %+v \n", plugin)
 
-	presenters.RecommendView(ctx, recommend.Recommend{Success: true, Text: plugin.Name})
+	result := new(recommend.Recommend)
+	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
+
+	if plugin.Name == "Hotpepper" {
+		var hotpepperRrt hotpepper.ReceiveRequestType
+		if err := c.BindJSON(&hotpepperRrt); err != nil {
+			presenters.ViewBadRequest(ctx, err)
+		}
+
+		fmt.Printf("payload: %+v \n", hotpepperRrt)
+		// payload, ok := rrt.ServiceDataValue.(hotpepper.Payload)
+		// if !ok {
+		// 	// payload = hotpepper.Payload{
+		// 	// 	Keywords: "焼肉",
+		// 	// }
+		// 	result.Success = false
+		// 	result.Text = "error"
+		// 	presenters.RecommendView(ctx, *result)
+		// }
+
+		payload := hotpepper.Payload{
+			Keywords: "焼肉",
+		}
+
+		serviceResponse, err := hotpepper.Request(&payload)
+
+		if err != nil {
+			result.Success = false
+			result.Text = err.Error()
+			presenters.RecommendView(ctx, *result)
+		}
+
+		shops, err := serviceResponse.GetShopNames()
+		if err != nil {
+			result.Success = false
+			result.Text = err.Error()
+			presenters.RecommendView(ctx, *result)
+		}
+		result.Text = shops[0]
+	}
+
+	result.Success = true
+	presenters.RecommendView(ctx, *result)
 }

@@ -13,6 +13,6 @@ func Router(e *gin.Engine) {
 	api.GET("/hello", controllers.Hello)
 
 	// PAからサービスのリクエストを受ける
-	api.GET("/request", controllers.Recommend)
+	api.POST("/recommend", controllers.Recommend)
 
 }
