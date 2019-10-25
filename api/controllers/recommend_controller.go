@@ -30,16 +30,10 @@ func Recommend(c *gin.Context) {
 	}
 
 	// Note : プラグインサービスの選定
-	// plugin, err := service.PluginServiceSelector(rrt.TopicCategory)
-	// if err != nil {
-	// 	fmt.Printf("Plugin not found: %+v", rrt.TopicCategory)
-	// 	presenters.RecommendView(ctx, recommend.Recommend{Success: false})
-	// }
-
-	plugin := &service.PluginService{
-		ID:            "uuid",
-		Name:          "Hotpepper",
-		BigCategoryID: "1",
+	plugin, err := service.PluginServiceSelector(rrt.TopicCategory)
+	if err != nil {
+		fmt.Printf("Plugin not found: %+v", rrt.TopicCategory)
+		presenters.RecommendView(ctx, recommend.Recommend{Success: false})
 	}
 
 	// Todo : プラグイン情報から、外部サービスにリクエストをする
