@@ -39,40 +39,42 @@ func Recommend(c *gin.Context) {
 	// Todo : プラグイン情報から、外部サービスにリクエストをする
 	fmt.Printf("Execute plugin: %+v \n", plugin)
 
-	result := new(recommend.Recommend)
 	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
 
+	// todo: 現在は確定でhotpepperなので、とりあえず。
 	if plugin.Name == "Hotpepper" {
 		var hotpepperRrt hotpepper.ReceiveRequestType
-		var payload hotpepper.Payload
+
 		if err := c.BindJSON(&hotpepperRrt); err != nil {
-			payload = hotpepper.Payload{
-				Keywords: "焼肉",
-			}
-			result.Success = false
-			result.Text = "error"
-			presenters.RecommendView(ctx, *result)
-		} else {
-			payload = hotpepperRrt.ServiceDataValue
+			presenters.RecommendView(ctx, recommendFailure("error"))
 		}
 
-		serviceResponse, err := hotpepper.Request(&payload)
+		rp := hotpepperRrt.RequestParameter
+
+		shops, err := hotpepper.Request(&rp)
 
 		if err != nil {
-			result.Success = false
-			result.Text = err.Error()
-			presenters.RecommendView(ctx, *result)
+			presenters.RecommendView(ctx, recommendFailure(err.Error()))
 		}
 
-		shops, err := serviceResponse.GetShopNames()
-		if err != nil {
-			result.Success = false
-			result.Text = err.Error()
-			presenters.RecommendView(ctx, *result)
-		}
-		result.Text = shops[0]
+		presenters.RecommendView(ctx, recommend.Recommend{
+			Success:    true,
+			Text:       shops[0].Name, // todo: とりあえず1個目
+			ImagePaths: nil,
+		})
+	} else {
+		presenters.RecommendView(ctx, recommend.Recommend{
+			Success:    true,
+			Text:       "いまのところhotpepper以外はないよん",
+			ImagePaths: nil,
+		})
 	}
+}
 
-	result.Success = true
-	presenters.RecommendView(ctx, *result)
+func recommendFailure(text string) recommend.Recommend {
+	return recommend.Recommend{
+		Success:    false,
+		Text:       text,
+		ImagePaths: nil,
+	}
 }

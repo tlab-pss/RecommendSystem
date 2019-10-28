@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func GetLatest() (*Location, error){
+func GetLatest() (*Location, error) {
 	res, _ := http.Get("pd/api/locations/latest")
 	defer res.Body.Close()
 
