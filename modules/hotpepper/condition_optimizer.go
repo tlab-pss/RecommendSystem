@@ -39,7 +39,7 @@ func Optimize() (*Condition, error) {
 
 
 	// 食べたもの
-
+  // todo: 昨日食べたものとかからよしなに
 
 	return &Condition{}, nil
 }
