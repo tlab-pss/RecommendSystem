@@ -9,9 +9,6 @@ import (
 func Router(e *gin.Engine) {
 	api := e.Group("/api")
 
-	// todo: サンプル実装。最初のprで下の1行を削除
-	api.GET("/hello", controllers.Hello)
-
 	// PAからサービスのリクエストを受ける
 	api.POST("/recommend", controllers.Recommend)
 
