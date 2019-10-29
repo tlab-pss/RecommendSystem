@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/yuuis/RecommendSystem/models/location"
 	"net/http"
 	"time"
@@ -106,11 +105,11 @@ func specify(ls *[]location.Location) (pair, pair, error) {
 	return h, o, nil
 }
 
-func getLocations() (*[]location, error) {
+func getLocations() (*[]location.Location, error) {
 	res, _ := http.Get("http://pd:8080/api/locations")
 	defer res.Body.Close()
 
-	l := make([]location, 0)
+	l := make([]location.Location, 0)
 	if err := json.NewDecoder(res.Body).Decode(&l); err != nil {
 		return nil, err
 	}
