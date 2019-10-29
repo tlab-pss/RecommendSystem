@@ -3,9 +3,9 @@ package interactors
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/yuuis/RecommendSystem/models/location"
 	"errors"
 	"fmt"
+	"github.com/yuuis/RecommendSystem/models/location"
 	"net/http"
 	"time"
 )

@@ -21,11 +21,11 @@ func Optimize() (*Condition, error) {
 	}
 
 	// 現在地と家との差
-	hlatDiff :=math.Abs(bl.House.Latitude - l.Latitude)
+	hlatDiff := math.Abs(bl.House.Latitude - l.Latitude)
 	hlngDiff := math.Abs(bl.House.Longitude - l.Longitude)
 
 	// 現在地とオフィスとの差
-	olatDiff :=math.Abs(bl.Office.Latitude - l.Latitude)
+	olatDiff := math.Abs(bl.Office.Latitude - l.Latitude)
 	olngDiff := math.Abs(bl.Office.Longitude - l.Longitude)
 
 	// todo: 位置の判定が適当すぎる
@@ -37,9 +37,8 @@ func Optimize() (*Condition, error) {
 		// todo: 外にいる人へのconditionつくる
 	}
 
-
 	// 食べたもの
-  // todo: 昨日食べたものとかからよしなに
+	// todo: 昨日食べたものとかからよしなに
 
 	return &Condition{}, nil
 }
