@@ -3,6 +3,8 @@ package interactors
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"github.com/yuuis/RecommendSystem/models/location"
 	"net/http"
 	"time"
@@ -32,7 +34,7 @@ func SpecifyLocations() error {
 		},
 	})
 
-	req, err := http.NewRequest("POST", "pd/api/locations", bytes.NewReader(bByte))
+	req, err := http.NewRequest("POST", "http://pd:8080/api/locations", bytes.NewReader(bByte))
 
 	if err != nil {
 		return err
@@ -78,6 +80,10 @@ func specify(ls *[]location.Location) (pair, pair, error) {
 	//for _, t := range ht {
 	// todo: 最多要素を抽出したい
 	//}
+	if len(ht) == 0 {
+		return pair{}, pair{}, errors.New("cant get house locations")
+	}
+
 	h := pair{
 		lat: ht[0].Latitude,
 		lng: ht[0].Longitude,
@@ -87,12 +93,29 @@ func specify(ls *[]location.Location) (pair, pair, error) {
 	//for _, t := range ot {
 	// todo: 最多要素を抽出したい
 	//}
+
+	if len(ot) == 0 {
+		return pair{}, pair{}, errors.New("cant get office locations")
+	}
+
 	o := pair{
 		lat: ot[0].Latitude,
 		lng: ot[0].Longitude,
 	}
 
 	return h, o, nil
+}
+
+func getLocations() (*[]location, error) {
+	res, _ := http.Get("http://pd:8080/api/locations")
+	defer res.Body.Close()
+
+	l := make([]location, 0)
+	if err := json.NewDecoder(res.Body).Decode(&l); err != nil {
+		return nil, err
+	}
+
+	return &l, nil
 }
 
 type pair struct {
