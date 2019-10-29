@@ -2,6 +2,8 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -9,6 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/yuuis/RecommendSystem/api"
 	"github.com/yuuis/RecommendSystem/infrastructures"
+	"github.com/yuuis/RecommendSystem/models/recommend"
 )
 
 func TestServiceRequestToHotpepper(t *testing.T) {
@@ -30,7 +33,11 @@ func TestServiceRequestToHotpepper(t *testing.T) {
 	req, _ := http.NewRequest("POST", "/api/recommend", bytes.NewBuffer([]byte(requestData)))
 	s.ServeHTTP(w, req)
 
-	json := `{"success":true,"text":"いろり屋 iroriya 新橋駅前店","image_paths":null}`
 	assert.Equal(t, 200, w.Code)
-	assert.Equal(t, json, w.Body.String())
+
+	var res recommend.Recommend
+	if err := json.Unmarshal(w.Body.Bytes(), &res); err != nil {
+		fmt.Println(fmt.Errorf("Response json parse error: %+v", err))
+	}
+	assert.Equal(t, true, res.Success)
 }

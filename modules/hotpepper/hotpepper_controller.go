@@ -2,6 +2,7 @@ package hotpepper
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -29,9 +30,13 @@ func Request(parameter *RequestParameter) ([]Shop, error) {
 	// r = io.TeeReader(r, os.Stderr)
 
 	hr := hotpepperResponse{}
-	if err := json.NewDecoder(r).Decode(hr); err != nil {
+	if err := json.NewDecoder(r).Decode(&hr); err != nil {
 		fmt.Println("JSON Unmarshal error:", err)
 		return nil, err
+	}
+
+	if len(hr.Results.Shop) < 1 {
+		return hr.Results.Shop, errors.New("result no shop")
 	}
 
 	return hr.Results.Shop, nil

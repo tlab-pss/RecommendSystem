@@ -12,8 +12,8 @@ import (
 	funk "github.com/thoas/go-funk"
 )
 
-// GetPluginService : プラグインされたサービスを取得
-func GetPluginService() (*[]PluginService, error) {
+// GetAllPluginService : プラグインされたサービスを取得
+func GetAllPluginService() (*[]PluginService, error) {
 	replyData := new([]PluginService)
 
 	req, err := http.NewRequest("GET", "http://pd:8080/api/plugin-services", nil)
@@ -41,12 +41,12 @@ func GetPluginService() (*[]PluginService, error) {
 	return replyData, nil
 }
 
-// PluginServiceSelector : プラグインサービスを選別する関数
-func PluginServiceSelector(sc ServiceCategory) (*PluginService, error) {
+// SelectServicePlugin : プラグインサービスを選別する関数
+func SelectServicePlugin(sc ServiceCategory) (*PluginService, error) {
 
 	var pluginService PluginService
 
-	pluginServices, err := GetPluginService()
+	pluginServices, err := GetAllPluginService()
 	if err != nil {
 		return &pluginService, err
 	}

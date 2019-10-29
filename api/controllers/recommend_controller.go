@@ -30,7 +30,7 @@ func Recommend(c *gin.Context) {
 	}
 
 	// Note : プラグインサービスの選定
-	plugin, err := service.PluginServiceSelector(rrt.TopicCategory)
+	plugin, err := service.SelectServicePlugin(rrt.TopicCategory)
 	if err != nil {
 		fmt.Printf("Plugin not found: %+v", rrt.TopicCategory)
 		presenters.RecommendView(ctx, recommend.Recommend{Success: false})
@@ -55,6 +55,7 @@ func Recommend(c *gin.Context) {
 
 		if err != nil {
 			presenters.RecommendView(ctx, recommendFailure(err.Error()))
+			return
 		}
 
 		presenters.RecommendView(ctx, recommend.Recommend{
