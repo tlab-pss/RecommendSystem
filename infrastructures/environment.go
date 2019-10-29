@@ -1,9 +1,7 @@
 package infrastructures
 
 import (
-	"fmt"
 	"log"
-	"os"
 
 	"github.com/joho/godotenv"
 )
@@ -13,7 +11,7 @@ func InitEnvironment() {
 }
 
 func InitEnvWithPath(path string) {
-	err := godotenv.Load(fmt.Sprintf(path+"%s.env", os.Getenv("GO_ENV")))
+	err := godotenv.Load(path + ".env")
 	if err != nil {
 		log.Fatalf("Error loading .env file: %s", err)
 	}
