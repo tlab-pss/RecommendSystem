@@ -54,7 +54,7 @@ func specify(ls *[]location) (pair, pair, error) {
 	ht := make([]location, 0)
 	ot := make([]location, 0)
 
-	for _, l := range ls {
+	for _, l := range *ls {
 		t, err := time.Parse(time.RFC3339Nano, l.CreatedAt)
 
 		if err != nil {

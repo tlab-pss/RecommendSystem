@@ -1,10 +1,10 @@
 package main
 
 import (
-	"log"
 	"github.com/joho/godotenv"
 	"github.com/yuuis/RecommendSystem/api"
 	"github.com/yuuis/RecommendSystem/infrastructures"
+	"log"
 )
 
 func main() {

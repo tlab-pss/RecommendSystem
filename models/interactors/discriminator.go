@@ -4,17 +4,17 @@ import (
 	"bytes"
 	"encoding/json"
 	"github.com/yuuis/RecommendSystem/models/service"
+	"log"
 	"net/http"
 	"os"
 )
 
 // base64エンコードされた画像を引数に渡してね！
 func Discriminate(i string) (*DiscriminateResult, error) {
-	var d DiscriminateResult
 	v, err := requestVisionAI(i)
 
 	if err != nil {
-		return &d, err
+		return &DiscriminateResult{}, err
 	}
 
 	var labels []string
@@ -32,14 +32,18 @@ func Discriminate(i string) (*DiscriminateResult, error) {
 
 		entity := v.Responses[0].WebDetection.WebEntities[0].Description // 最高ポイントのentity
 		if err := storeFood(labels, entity, i); err != nil {
-			return &d, err
+			return &DiscriminateResult{}, err
 		}
 
+		var d DiscriminateResult
 		d.BigCategoryID = service.Gourmet
 		d.Object = entity
+
+		return &d, nil
 	} else {
 		// todo: 現状食べ物以外はない
-		return &d, nil
+		log.Print("食べ物ちゃうやん！！！")
+		return &DiscriminateResult{}, nil
 	}
 }
 
@@ -95,10 +99,10 @@ func storeFood(l []string, e string, i string) error {
 		"calorie":           0.0, // todo: カロリーどうやって求めようかな
 		"photo":             i,
 		"labels":            l,
-		"small_category_id": 1, // todo: 小カテゴリIDの紐付けめんど...
+		"small_category_id": "1", // todo: 小カテゴリIDの紐付けめんど...
 	})
 
-	req, err := http.NewRequest("POST", "pd/api/hotpepper/intake", bytes.NewReader(bByte))
+	req, err := http.NewRequest("POST", "http://pd:8080/api/hotpepper/intakes", bytes.NewReader(bByte))
 
 	if err != nil {
 		return err
@@ -160,7 +164,7 @@ type visionAIResponse struct {
 
 type DiscriminateResult struct {
 	BigCategoryID service.ServiceCategory
-	Object string
+	Object        string
 }
 
 // todo: 全体のutil作ってそこに移したい
