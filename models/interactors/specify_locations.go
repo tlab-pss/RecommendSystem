@@ -3,12 +3,13 @@ package interactors
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/yuuis/RecommendSystem/models/location"
 	"net/http"
 	"time"
 )
 
 func SpecifyLocations() error {
-	ls, err := getLocations()
+	ls, err := location.GetAll()
 
 	if err != nil {
 		return err
@@ -50,9 +51,9 @@ func SpecifyLocations() error {
 	return nil
 }
 
-func specify(ls *[]location) (pair, pair, error) {
-	ht := make([]location, 0)
-	ot := make([]location, 0)
+func specify(ls *[]location.Location) (pair, pair, error) {
+	ht := make([]location.Location, 0)
+	ot := make([]location.Location, 0)
 
 	for _, l := range *ls {
 		t, err := time.Parse(time.RFC3339Nano, l.CreatedAt)
@@ -94,26 +95,7 @@ func specify(ls *[]location) (pair, pair, error) {
 	return h, o, nil
 }
 
-func getLocations() (*[]location, error) {
-	res, _ := http.Get("pd/api/locations")
-	defer res.Body.Close()
-
-	l := make([]location, 0)
-	if err := json.NewDecoder(res.Body).Decode(&l); err != nil {
-		return nil, err
-	}
-
-	return &l, nil
-}
-
 type pair struct {
 	lat float64
 	lng float64
-}
-
-type location struct {
-	ID        string  `json:"ID"`
-	Latitude  float64 `json:"Latitude"`
-	Longitude float64 `json:"Longitude"`
-	CreatedAt string  `json:"CreatedAt"`
 }

@@ -8,6 +8,10 @@ services:
       - GO_ENV=develop
     volumes:
       - ./:/go/src
+      - gomod-data:/go/pkg/mod/
     ports:
       - "8087:8080"
     tty: true
+
+volumes:
+  gomod-data:
