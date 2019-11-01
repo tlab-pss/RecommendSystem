@@ -23,6 +23,7 @@ RUN go build -o RecommendSystem main.go
 
 FROM alpine:3.9 as release
 WORKDIR /apps
+COPY --from=build /go/src/.env /apps/
 COPY --from=build /go/src/RecommendSystem /usr/local/bin/RecommendSystem
 EXPOSE 8080
 ENTRYPOINT ["/usr/local/bin/RecommendSystem"]
