@@ -6,7 +6,5 @@ services:
       target: release
     environment:
       - GO_ENV=production
-    volumes:
-      - ./:/go/src
     ports:
       - "8087:8080"
