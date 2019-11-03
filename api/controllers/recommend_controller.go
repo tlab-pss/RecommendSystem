@@ -22,11 +22,13 @@ func Recommend(c *gin.Context) {
 	bodyBytes, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {
 		presenters.ViewBadRequest(ctx, err)
+		return
 	}
 
 	var rrt request.ReceiveRequestType
 	if err := json.Unmarshal(bodyBytes, &rrt); err != nil {
 		presenters.ViewBadRequest(ctx, err)
+		return
 	}
 
 	// Note : プラグインサービスの選定
@@ -34,6 +36,7 @@ func Recommend(c *gin.Context) {
 	if err != nil {
 		fmt.Printf("Plugin not found: %+v", rrt.TopicCategory)
 		presenters.RecommendView(ctx, recommend.Recommend{Success: false})
+		return
 	}
 
 	// Todo : プラグイン情報から、外部サービスにリクエストをする
@@ -42,11 +45,12 @@ func Recommend(c *gin.Context) {
 	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
 
 	// todo: 現在は確定でhotpepperなので、とりあえず。
-	if plugin.Name == "Hotpepper" {
+	if plugin.Name == "hotpepper" {
 		var hotpepperRrt hotpepper.ReceiveRequestType
 
 		if err := c.BindJSON(&hotpepperRrt); err != nil {
 			presenters.RecommendView(ctx, recommendFailure("error"))
+			return
 		}
 
 		rp := hotpepperRrt.RequestParameter

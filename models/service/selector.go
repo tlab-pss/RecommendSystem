@@ -2,19 +2,16 @@ package service
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"math/rand"
 	"net/http"
 	"time"
-
-	funk "github.com/thoas/go-funk"
 )
 
 // GetAllPluginService : プラグインされたサービスを取得
-func GetAllPluginService() (*[]PluginService, error) {
-	replyData := new([]PluginService)
+func GetAllPluginService() ([]PluginService, error) {
+	var replyData []PluginService
 
 	req, err := http.NewRequest("GET", "http://pd:8080/api/plugin-services", nil)
 	if err != nil {
@@ -33,7 +30,7 @@ func GetAllPluginService() (*[]PluginService, error) {
 	var r io.Reader = resp.Body
 	// r = io.TeeReader(r, os.Stderr)
 
-	if err := json.NewDecoder(r).Decode(replyData); err != nil {
+	if err := json.NewDecoder(r).Decode(&replyData); err != nil {
 		fmt.Println("JSON Unmarshal error:", err)
 		return nil, err
 	}
@@ -46,16 +43,14 @@ func SelectServicePlugin(sc ServiceCategory) (*PluginService, error) {
 
 	var pluginService PluginService
 
-	pluginServices, err := GetAllPluginService()
+	allServices, err := GetAllPluginService()
 	if err != nil {
 		return &pluginService, err
 	}
 
-	pluginList, ok := funk.Filter(pluginServices, func(plugin *PluginService) bool {
-		return plugin.toServiceCategory() == sc
-	}).([]PluginService)
-	if ok != true {
-		return &pluginService, errors.New("Could not cast PluginService")
+	var pluginList []PluginService
+	for _, m := range allServices {
+		pluginList = append(pluginList, m)
 	}
 
 	// TODO : 今はランダム。利用傾向や満足度などからよしなにしたい
