@@ -45,7 +45,7 @@ func Recommend(c *gin.Context) {
 	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
 
 	// todo: 現在は確定でhotpepperなので、とりあえず。
-	if plugin.Name == "Hotpepper" {
+	if plugin.Name == "hotpepper" {
 		var hotpepperRrt hotpepper.ReceiveRequestType
 
 		if err := c.BindJSON(&hotpepperRrt); err != nil {
