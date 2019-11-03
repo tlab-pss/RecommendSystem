@@ -10,7 +10,7 @@ import (
 func TestHotpepperUnit(t *testing.T) {
 	infrastructures.InitEnvWithPath("../../")
 
-	payload := &Payload{
+	payload := &RequestParameter{
 		Keywords: "肉まん",
 	}
 
@@ -18,9 +18,10 @@ func TestHotpepperUnit(t *testing.T) {
 	if err != nil {
 		t.Errorf("cannot access api: %+v", err)
 	}
-	if len(res.Results.Error) != 0 {
-		t.Errorf("api errors: %+v", res.Results.Error)
+
+	if len(res) <= 0 {
+		t.Errorf("api errors: %+v", res)
 	}
 
-	assert.Equal(t, 1, res.Results.ResultsStart)
+	assert.Equal(t, 10, len(res))
 }
