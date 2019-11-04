@@ -1,6 +1,7 @@
 package hotpepper
 
 import (
+	"fmt"
 	"github.com/yuuis/RecommendSystem/models/basic_location"
 	"github.com/yuuis/RecommendSystem/models/location"
 	"math"
@@ -32,9 +33,25 @@ func Optimize() (*Condition, error) {
 	if hlatDiff < 0.001 && hlngDiff < 0.001 {
 		// todo: 家にいる人へのconditionつくる
 	} else if olatDiff < 0.001 && olngDiff < 0.001 {
-		// todo: オフィスにいる人へのconditionつくる
+		// オフィスにいる人
+
+		// とりあえず現在地
+		return &Condition{
+			[]map[string]string{
+				{"lat": fmt.Sprintf("%f", l.Latitude)},
+				{"lng": fmt.Sprintf("%f", l.Longitude)},
+			},
+		}, nil
 	} else {
-		// todo: 外にいる人へのconditionつくる
+		// 外にいる人
+
+		// とりあえず現在地
+		return &Condition{
+			[]map[string]string{
+				{"lat": fmt.Sprintf("%f", l.Latitude)},
+				{"lng": fmt.Sprintf("%f", l.Longitude)},
+			},
+		}, nil
 	}
 
 	// 食べたもの
@@ -44,5 +61,5 @@ func Optimize() (*Condition, error) {
 }
 
 type Condition struct {
-	Condition []map[string]interface{}
+	Condition []map[string]string
 }
