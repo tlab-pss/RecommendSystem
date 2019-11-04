@@ -32,8 +32,6 @@ func Recommend(c *gin.Context) {
 		return
 	}
 
-	fmt.Printf("Params: %+v", rrt)
-
 	// Note : プラグインサービスの選定
 	plugin, err := service.SelectServicePlugin(rrt.TopicCategory)
 	if err != nil {
