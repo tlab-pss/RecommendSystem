@@ -10,6 +10,7 @@ import (
 	"github.com/yuuis/RecommendSystem/api/utilities"
 	"github.com/yuuis/RecommendSystem/models/recommend"
 	"github.com/yuuis/RecommendSystem/models/request"
+	"github.com/yuuis/RecommendSystem/models/response"
 	"github.com/yuuis/RecommendSystem/models/service"
 	"github.com/yuuis/RecommendSystem/modules/hotpepper"
 
@@ -35,12 +36,22 @@ func Recommend(c *gin.Context) {
 	plugin, err := service.SelectServicePlugin(rrt.TopicCategory)
 	if err != nil {
 		fmt.Printf("Plugin not found: %+v", rrt.TopicCategory)
-		presenters.RecommendView(ctx, recommend.Recommend{Success: false})
+
+		presenters.RecommendView(ctx, response.ResponseType{
+			ResponseData: recommend.Recommend{
+				Success: false,
+			},
+		})
 		return
 	}
 
 	// Todo : プラグイン情報から、外部サービスにリクエストをする
 	fmt.Printf("Execute plugin: %+v \n", plugin)
+
+	responseValue := &response.ResponseType{
+		UUID:        plugin.ID, // TODO : リクエストの履歴をDBに保存したい
+		ServiceName: plugin.Name,
+	}
 
 	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
 
@@ -49,31 +60,33 @@ func Recommend(c *gin.Context) {
 		var hotpepperRrt hotpepper.ReceiveRequestType
 
 		if err := c.BindJSON(&hotpepperRrt); err != nil {
-			presenters.RecommendView(ctx, recommendFailure("error"))
-			return
+			responseValue.ResponseData = recommendFailure("error")
+			goto Return
 		}
 
 		rp := hotpepperRrt.RequestParameter
 
 		shops, err := hotpepper.Request(&rp)
-
 		if err != nil {
-			presenters.RecommendView(ctx, recommendFailure(err.Error()))
-			return
+			responseValue.ResponseData = recommendFailure(err.Error())
+			goto Return
 		}
 
-		presenters.RecommendView(ctx, recommend.Recommend{
+		responseValue.ResponseData = recommend.Recommend{
 			Success:    true,
 			Text:       shops[0].Name, // todo: とりあえず1個目
 			ImagePaths: nil,
-		})
+		}
 	} else {
-		presenters.RecommendView(ctx, recommend.Recommend{
+		responseValue.ResponseData = recommend.Recommend{
 			Success:    true,
 			Text:       "いまのところhotpepper以外はないよん",
 			ImagePaths: nil,
-		})
+		}
 	}
+
+Return:
+	presenters.RecommendView(ctx, *responseValue)
 }
 
 func recommendFailure(text string) recommend.Recommend {

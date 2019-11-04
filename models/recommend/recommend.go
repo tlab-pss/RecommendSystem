@@ -1,6 +1,6 @@
 package recommend
 
-// Recommend : レコメンドレスポンスの型
+// Recommend : レコメンド内容の結果
 type Recommend struct {
 	Success    bool     `json:"success"`
 	Text       string   `json:"text"`
