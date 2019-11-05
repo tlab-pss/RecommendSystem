@@ -46,10 +46,10 @@ func Search(query string) (*[]Page, error) {
 		}
 
 		p = append(p, Page{
-			URL:         item.Link,
-			Title:       item.Title,
-			Description: item.Snippet,
-			Thumbnail:   thumbnail,
+			URL:          item.Link,
+			Title:        item.Title,
+			Description:  item.Snippet,
+			ThumbnailUrl: thumbnail,
 		})
 	}
 
@@ -57,10 +57,10 @@ func Search(query string) (*[]Page, error) {
 }
 
 type Page struct {
-	URL         string
-	Title       string
-	Description string
-	Thumbnail   string
+	URL          string
+	Title        string
+	Description  string
+	ThumbnailUrl string
 }
 
 type CustomSearchResponse struct {
