@@ -3,8 +3,10 @@ package service
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/yuuis/RecommendSystem/models/basic_location"
+	"github.com/yuuis/RecommendSystem/models/location"
 	"io"
-	"math/rand"
+	"math"
 	"net/http"
 	"time"
 )
@@ -39,7 +41,7 @@ func GetAllPluginService() ([]PluginService, error) {
 }
 
 // SelectServicePlugin : プラグインサービスを選別する関数
-func SelectServicePlugin(sc ServiceCategory) (*PluginService, error) {
+func SelectServicePlugin(sc ServiceCategory, l *location.Location) (*PluginService, error) {
 
 	var pluginService PluginService
 
@@ -53,10 +55,45 @@ func SelectServicePlugin(sc ServiceCategory) (*PluginService, error) {
 		pluginList = append(pluginList, m)
 	}
 
-	// TODO : 今はランダム。利用傾向や満足度などからよしなにしたい
-	rand.Seed(time.Now().UnixNano())
-	i := rand.Intn(len(pluginList))
-	pluginService = pluginList[i]
+	// todo: 位置情報で分ける
+	// ユーザの位置
+	bl, err := basic_location.Get()
+	if err != nil {
+		return &pluginService, err
+	}
 
-	return &pluginService, nil
+	// 現在地と家との差
+	hlatDiff := math.Abs(bl.House.Latitude - l.Latitude)
+	hlngDiff := math.Abs(bl.House.Longitude - l.Longitude)
+
+	// 現在地とオフィスとの差
+	olatDiff := math.Abs(bl.Office.Latitude - l.Latitude)
+	olngDiff := math.Abs(bl.Office.Longitude - l.Longitude)
+
+	// todo: 位置の判定が適当すぎる
+	if hlatDiff < 0.001 && hlngDiff < 0.001 {
+		//  家にいる人
+		return &PluginService{
+			ID:            "delivery",
+			Name:          "delivery",
+			BigCategoryID: string(sc),
+			CreatedAt:     time.Time{},
+		}, nil
+	} else if olatDiff < 0.001 && olngDiff < 0.001 {
+		// オフィスにいる人
+		return &PluginService{
+			ID:            "hotpepper",
+			Name:          "hotpepper",
+			BigCategoryID: string(sc),
+			CreatedAt:     time.Time{},
+		}, nil
+	} else {
+		// 外にいる人
+		return &PluginService{
+			ID:            "hotpepper",
+			Name:          "hotpepper",
+			BigCategoryID: string(sc),
+			CreatedAt:     time.Time{},
+		}, nil
+	}
 }
