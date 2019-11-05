@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/yuuis/RecommendSystem/models/location"
 	"io/ioutil"
 
 	"github.com/yuuis/RecommendSystem/api/presenters"
@@ -32,8 +33,14 @@ func Recommend(c *gin.Context) {
 		return
 	}
 
+	l, err := location.GetLatest()
+	if err != nil {
+		presenters.ViewInternalServerError(ctx, err)
+		return
+	}
+
 	// Note : プラグインサービスの選定
-	plugin, err := service.SelectServicePlugin(rrt.TopicCategory)
+	plugin, err := service.SelectServicePlugin(rrt.TopicCategory, l)
 	if err != nil {
 		fmt.Printf("Plugin not found: %+v", rrt.TopicCategory)
 
